@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"context"
+	//"context"
 	"database/sql"
 	"human-resources-api/commons/structs"
 
@@ -14,30 +14,6 @@ type repository struct {
 
 func NewRepository(db *sql.DB) Repository {
 	return &repository{db}
-}
-
-func (r * repository) SignIn(context context.Context, auth *structs.AuthUser)(bool, error){
-	query := ` SELECT * FROM users.users(email, password)`
-	transaction, trsErr := r.db.Begin()
-	if trsErr != nil {
-		return false, trsErr
-	}
-
-	signInUserStmt, stmtErr := transaction.PrepareContext(context, query)
-	if stmtErr != nil{
-		return false, stmtErr
-	}
-	defer signInUserStmt.Close()
-	_,rstErr := signInUserStmt.Exec(
-		auth.Email,
-		auth.Password,
-	)
-	if rstErr != nil{
-		transaction.Rollback()
-		return false, rstErr
-	}
-	transaction.Commit()
-	return true, nil
 }
 
 func (r *repository) verifyIfEmailExists(email string)(bool, error){
@@ -70,4 +46,45 @@ func (r *repository) verifyIfEmailExists(email string)(bool, error){
 	}
 
 	return true, nil
+}
+
+func (r *repository) VerifyIfPasswordMatches(email, password string)(*structs.UserInfo, error){
+	query := `SELECT * FROM users.users usr WHERE usr.email = ? AND  usr.password = ?`
+
+	transaction, trsErr := r.db.Begin()
+	if trsErr != nil {
+		return nil, trsErr
+	}
+
+	verifyEmailStmt, stmtErr := transaction.Prepare(query)
+	if stmtErr != nil {
+		return nil, trsErr
+	}
+	defer verifyEmailStmt.Close()
+
+	rows, rstErr := verifyEmailStmt.Query(email, password)
+	if rstErr != nil {
+		return nil, rstErr
+	}
+
+	var totalResults int64 = 0
+
+	var currentUser *structs.UserInfo
+	
+	for rows.Next() {
+		totalResults = commons.HasResults
+
+		if err := rows.Scan(
+			&currentUser.ID,
+			&currentUser.Name,
+		); err != nil {
+			return nil, err
+		}
+	}
+
+	if totalResults == commons.EmptyEmailResult {
+		return nil, nil
+	}
+
+	return currentUser, nil
 }

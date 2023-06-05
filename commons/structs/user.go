@@ -23,6 +23,7 @@ type User struct {
 }
 
 type UserInfo struct {
+	ID 		  			*int64 		`json:"id"`
 	Name 				string 		`json:"name"`
 	Email 	  			string 		`json:"email"`
 	Document 	  		string 		`json:"document"`

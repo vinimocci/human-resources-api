@@ -3,7 +3,8 @@ package auth
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	
+
+	commons "human-resources-api/commons"
 	structs "human-resources-api/commons/structs"
 )
 
@@ -11,38 +12,50 @@ type service struct {
 	repo Repository
 }
 
-
 func NewService(repo Repository) Service {
 	return &service{repo}
 }
 
-func (s *service)SignIn (c *gin.Context)(bool, error){
-	auth := &structs.User{}
-
-	if c.Request.PostFormValue("email")!= "" {
-		auth.Email = c.Request.PostFormValue("email")
-	}else{
-		return false, fmt.Errorf("missing user email")
+func (s *service) SignIn (context *gin.Context)(*structs.UserInfo, error){
+	userInfo, usrInfoErr := validateUserLoginData(context)
+	if usrInfoErr != nil {
+		return nil, usrInfoErr
 	}
 
-	if c.Request.PostFormValue("password")!= ""{
-		auth.Password = c.Request.PostFormValue("password doesn't match")
-	}else{
-		return false, fmt.Errorf("missing user password")
-	}
-
-	hasEmailOnSytem, emailErr := s.verifyIfEmailExists(auth.Email)
+	hasEmailOnSytem, emailErr := s.verifyIfEmailExists(userInfo.Email)
 	if emailErr != nil{
-		return false, emailErr
+		return nil, emailErr
 	}
 
 	if !hasEmailOnSytem {
-		return false, emailErr
+		return nil, emailErr
 	}
 
-	// verificar a logica da senha, se bate com o email cadastrado e senha antes inserida
+	userData, PassMatchErr := s.repo.VerifyIfPasswordMatches(userInfo.Email, userInfo.Password)
+	if PassMatchErr != nil{
+		return nil, PassMatchErr
+	}
 
-	return true, nil
+	return userData, nil
+}
+
+func validateUserLoginData (context *gin.Context) (*structs.User, error) {
+	userLoginInfo := &structs.User{}
+
+	if context.Request.PostFormValue("email")!= commons.EmptyResult {
+		userLoginInfo.Email = context.Request.PostFormValue("email")
+	}else{
+		return nil, fmt.Errorf("missing user email")
+	}
+
+	if context.Request.PostFormValue("password")!= commons.EmptyResult{
+		userLoginInfo.Password = context.Request.PostFormValue("password doesn't match")
+	}else{
+		return nil, fmt.Errorf("missing user password")
+	}
+
+	
+	return userLoginInfo, nil
 }
 
 func (s *service) verifyIfEmailExists (email string) (bool, error){
