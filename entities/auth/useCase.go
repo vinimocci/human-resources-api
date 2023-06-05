@@ -39,8 +39,8 @@ func (s *service) SignIn (context *gin.Context)(*structs.UserInfo, error){
 	return userData, nil
 }
 
-func validateUserLoginData (context *gin.Context) (*structs.User, error) {
-	userLoginInfo := &structs.User{}
+func validateUserLoginData (context *gin.Context) (*structs.AuthUser, error) {
+	userLoginInfo := &structs.AuthUser{}
 
 	if context.Request.PostFormValue("email")!= commons.EmptyResult {
 		userLoginInfo.Email = context.Request.PostFormValue("email")
@@ -54,7 +54,6 @@ func validateUserLoginData (context *gin.Context) (*structs.User, error) {
 		return nil, fmt.Errorf("missing user password")
 	}
 
-	
 	return userLoginInfo, nil
 }
 

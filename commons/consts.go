@@ -6,10 +6,8 @@ const (
 	COMPANY =3
 )
 
-const EmptyResult = ""
-const EmptyEmailResult = 0
 const HasResults = 1
-
+const EmptyResult = ""
 const HasResult = true
-
 const EmptyUserType = 0
+const EmptyEmailResult = 0

@@ -1,7 +1,6 @@
 package auth
 
 import (
-	//"context"
 	"database/sql"
 	"human-resources-api/commons/structs"
 

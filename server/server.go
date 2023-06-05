@@ -16,7 +16,6 @@ import (
 )
 
 func Routes() {
-
 	config, err := toml.LoadFile("config.toml")
     if err != nil {
         fmt.Println("Error loading config file:", err)
@@ -24,8 +23,12 @@ func Routes() {
     }
 
 	APIHost := config.Get("system.host").(string)
+	APIPort := config.Get("system.apiPort").(string)
+	databaseHost := config.Get("database.host").(string)
+	baseTable := config.Get("database.baseTable").(string)
+	databasePass := config.Get("database.password").(string)
 
-	db, err := sql.Open("mysql", "root:An1m@Rum@2000@tcp(localhost:3306)/users?parseTime=true")
+	db, err := sql.Open("mysql", "root:"+databasePass+"@tcp("+databaseHost+")/"+baseTable+"?parseTime=true")
 	if err != nil {
 		log.Fatalf("db: failed to connect./n%s", err)
 	}
@@ -88,5 +91,5 @@ func Routes() {
 		}
 	})
 
-	routes.Run(":5023")
+	routes.Run(APIPort)
 }

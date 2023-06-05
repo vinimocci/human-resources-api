@@ -40,4 +40,3 @@ type UserType struct {
 	ID 			int64 `json:"id"`
 	Description string `json:"description"`
 }
-
