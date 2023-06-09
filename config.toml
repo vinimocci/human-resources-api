@@ -1,8 +1,8 @@
 [system]
 apiPort = ":5023"
-host    = "http://localhost:5173"
+host    = "http://localhost:3000"
 
 [database]
-password = "An1m@Rum@2000"
-host     = "localhost:3306"
 baseTable = "users"
+password  = "An1m@Rum@2000"
+host      = "localhost:3306"

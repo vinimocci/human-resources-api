@@ -51,16 +51,17 @@ func Routes() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	routes.GET("/signin", func (c*gin.Context)  {
+	routes.POST("/signin", func (c*gin.Context)  {
 		result, err := auth.Service.SignIn(authService,c)
 		if err != nil{
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": err.Error(),
 			})
+		}else{
+			c.JSON(http.StatusOK, gin.H{
+				"message": result,
+			})
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"message": result,
-		})
 	})
 
 	routes.GET("/getuserinfo", func(c *gin.Context) {
