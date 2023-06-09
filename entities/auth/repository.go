@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+	"fmt"
 	"human-resources-api/commons/structs"
 
 	commons "human-resources-api/commons"
@@ -82,7 +83,7 @@ func (r *repository) VerifyIfPasswordMatches(email, password string)(*structs.Us
 	}
 
 	if totalResults == commons.EmptyEmailResult {
-		return nil, nil
+		return nil, fmt.Errorf("user password don't match")
 	}
 
 	return currentUser, nil

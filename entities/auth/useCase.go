@@ -49,7 +49,7 @@ func validateUserLoginData (context *gin.Context) (*structs.AuthUser, error) {
 	}
 
 	if context.Request.PostFormValue("password")!= commons.EmptyResult{
-		userLoginInfo.Password = context.Request.PostFormValue("password doesn't match")
+		userLoginInfo.Password = context.Request.PostFormValue("password")
 	}else{
 		return nil, fmt.Errorf("missing user password")
 	}
