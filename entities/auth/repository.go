@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"database/sql"
 	"fmt"
+	"database/sql"
 	"human-resources-api/commons/structs"
 
 	commons "human-resources-api/commons"
@@ -49,7 +49,7 @@ func (r *repository) verifyIfEmailExists(email string)(bool, error){
 }
 
 func (r *repository) VerifyIfPasswordMatches(email, password string)(*structs.UserInfo, error){
-	query := `SELECT * FROM users.users usr WHERE usr.email = ? AND  usr.password = ?`
+	query := `SELECT usr.id, usr.email FROM users.users usr WHERE usr.email = ? AND  usr.password = ?`
 
 	transaction, trsErr := r.db.Begin()
 	if trsErr != nil {
@@ -69,14 +69,14 @@ func (r *repository) VerifyIfPasswordMatches(email, password string)(*structs.Us
 
 	var totalResults int64 = 0
 
-	var currentUser *structs.UserInfo
+	currentUser := &structs.UserInfo{}
 	
 	for rows.Next() {
 		totalResults = commons.HasResults
 
 		if err := rows.Scan(
 			&currentUser.ID,
-			&currentUser.Name,
+			&currentUser.Email,
 		); err != nil {
 			return nil, err
 		}
