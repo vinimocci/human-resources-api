@@ -138,8 +138,12 @@ func validateUserData (context *gin.Context) (*structs.User, error) {
 func (s *service) GetUserInfoByID (context *gin.Context) (*structs.UserInfo, error) {
 	var userID int64
 
-	if context.Request.PostFormValue("userID") != commons.EmptyResult {
-		convertedUserID, convErr := strconv.ParseInt(context.Request.PostFormValue("userID"), 10, 64) 
+	userId := context.Param("id")
+
+	fmt.Println(userId)
+
+	if context.Param("id") != commons.EmptyResult {
+		convertedUserID, convErr := strconv.ParseInt(context.Param("id"), 10, 64) 
 		if convErr != nil {
 			return nil, fmt.Errorf("error parsing user ID to int64 type")
 		}
