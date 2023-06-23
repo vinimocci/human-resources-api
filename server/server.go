@@ -92,5 +92,19 @@ func Routes() {
 		}
 	})
 
+	routes.POST("/updateUser", func(c *gin.Context) {
+		result, err := user.Service.UpdateUser(userService, c)
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": err.Error() ,
+			})
+		}else {
+			c.JSON(http.StatusOK, gin.H{
+				"message":  result,
+			})
+		}
+	})
+
 	routes.Run(APIPort)
 }

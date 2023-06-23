@@ -20,7 +20,7 @@ func NewService (repo Repository) Service {
 
 func (s *service) PostUser(context *gin.Context) (bool, error) {
 
-	user, err := validateUserData(context)
+	user, err := validateUserData(context, commons.NotUpdating)
 	if err != nil {
 		return false, err
 	}
@@ -33,8 +33,62 @@ func (s *service) PostUser(context *gin.Context) (bool, error) {
 	return result, nil
 }
 
-func validateUserData (context *gin.Context) (*structs.User, error) {
+func validateUserData (context *gin.Context, isUpdating bool) (*structs.User, error) {
 	user := &structs.User{}
+
+	if isUpdating {
+		if context.Request.PostFormValue("id") != commons.EmptyResult {
+			convertedUserID, usrIDErr := strconv.ParseInt(context.Request.PostFormValue("id"), 10, 64) 
+			if usrIDErr != nil {
+				return nil, fmt.Errorf("error parsing user ID to int64 type")
+			}else{
+				user.ID = convertedUserID
+			}
+		}else {
+			return nil, fmt.Errorf("missing user ID")
+		}
+
+		if context.Request.PostFormValue("birthday") != commons.EmptyResult {
+			parsedUserBirthday, err := time.Parse("01-02-2006 00:00:00", context.Request.PostFormValue("birthday")) 
+			if err != nil {
+				return nil, err
+			}
+	
+			user.Birthday = parsedUserBirthday
+		}else {
+			return nil, fmt.Errorf("missing birthday from user")
+		}
+
+		if context.Request.PostFormValue("address") != commons.EmptyResult {
+			reqAddres := context.Request.PostFormValue("address")
+			user.Address = reqAddres
+		}
+
+		if context.Request.PostFormValue("addresscomplement") != commons.EmptyResult {
+			reqAddressComplement := context.Request.PostFormValue("addresscomplement")
+			user.AddressComplement = reqAddressComplement
+		}
+
+		if context.Request.PostFormValue("addressneighborhood") != commons.EmptyResult {
+			reqAddressNeighborhood := context.Request.PostFormValue("addressneighborhood")
+			user.AddressNeighborhood = reqAddressNeighborhood
+		}
+
+		if context.Request.PostFormValue("addresscity") != commons.EmptyResult {
+			reqAddressCity := context.Request.PostFormValue("addresscity")
+			user.AddressCity = reqAddressCity
+		}
+
+		if context.Request.PostFormValue("addressstate") != commons.EmptyResult {
+			reqAddressState := context.Request.PostFormValue("addressstate")
+			user.AddressState = reqAddressState
+		}
+
+		if context.Request.PostFormValue("addresszipcode") != commons.EmptyResult {
+			reqAddressZipCode := context.Request.PostFormValue("addresszipcode")
+			user.AddressZipCode = reqAddressZipCode
+		}
+	}
 
 	var userType int64
 
@@ -157,4 +211,28 @@ func (s *service) GetUserInfoByID (context *gin.Context) (*structs.UserInfo, err
 	}
 
 	return userData, nil
+}
+
+
+func (s *service) UpdateUser(context *gin.Context) (bool, error) {
+	user, err := validateUserData(context, commons.Updating)
+	if err != nil {
+		return false, err
+	}
+	
+	userTypeFromDB, usrTypErr := s.repo.GetUserTypeByID(user.ID)
+	if usrTypErr != nil {
+		return false, usrTypErr
+	}
+
+	if user.UserType.ID != userTypeFromDB {
+		return false, fmt.Errorf("user doesn't have the access to change it's type")
+	}
+
+	result, resultErr := s.repo.UpdateUser(user)
+	if resultErr != nil {
+		return false, resultErr
+	}
+
+	return result, nil
 }
