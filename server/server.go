@@ -64,7 +64,7 @@ func Routes() {
 		}
 	})
 
-	routes.GET("/getuserinfo", func(c *gin.Context) {
+	routes.GET("/getuserinfo/:id", func(c *gin.Context) {
 		result, err := user.Service.GetUserInfoByID(userService, c)
 
 		if err != nil {
