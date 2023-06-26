@@ -92,5 +92,12 @@ func Routes() {
 		}
 	})
 
+	//testing purposes
+	routes.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message":  "pong! =D",
+		})
+	})
+
 	routes.Run(APIPort)
 }
