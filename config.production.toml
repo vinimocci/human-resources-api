@@ -1,0 +1,8 @@
+[system]
+apiPort = ":5023"
+host    = "http://0.0.0:3000"
+
+[database]
+baseTable = "users"
+password  = "An1m@Rum@2000"
+host      = "0.0.0:3306"

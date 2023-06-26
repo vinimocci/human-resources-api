@@ -1,28 +1,27 @@
 package server
 
 import (
+	"os"
 	"log"
-	"fmt"
 	"time"
 	"net/http"
 	"database/sql"
 	"github.com/gin-gonic/gin"
+	"human-resources-api/utils"
 	"github.com/gin-contrib/cors"
-	"github.com/pelletier/go-toml"
 	"human-resources-api/entities/user"
-	
+
 	_ 	 "github.com/go-sql-driver/mysql"
 	auth "human-resources-api/entities/auth"
 )
 
 func Routes() {
-	config, err := toml.LoadFile("config.toml")
-    if err != nil {
-        fmt.Println("Error loading config file:", err)
-        return
+	config, tomlErr := utils.GetCurrentEnvironment(os.Getenv("ENVIRONMENT"))
+    if tomlErr != nil {
+		panic("error loading config file")
     }
 
-	//APIHost := config.Get("system.host").(string)
+	APIHost := config.Get("system.host").(string)
 	APIPort := config.Get("system.apiPort").(string)
 	databaseHost := config.Get("database.host").(string)
 	baseTable := config.Get("database.baseTable").(string)
@@ -43,7 +42,7 @@ func Routes() {
 	routes.SetTrustedProxies([]string{})
 
 	routes.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
+		AllowOrigins:     []string{APIHost},
 		AllowHeaders:     []string{"Access-Control-Allow-Origin", "*"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowMethods:     []string{"GET", "POST"},
@@ -93,7 +92,7 @@ func Routes() {
 	})
 
 	//testing purposes
-	routes.GET("/ping", func(c *gin.Context) {
+	routes.GET("/ping", func(c *gin.Context) {		
 		c.JSON(http.StatusOK, gin.H{
 			"message":  "pong! =D",
 		})

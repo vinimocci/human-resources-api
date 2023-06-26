@@ -11,3 +11,6 @@ const EmptyResult = ""
 const HasResult = true
 const EmptyUserType = 0
 const EmptyEmailResult = 0
+const ProductionEnvironment = "production"
+const DevelopmentEnvironment = "development"
+const StagingEnvironment = "staging"
