@@ -22,7 +22,7 @@ func Routes() {
         return
     }
 
-	APIHost := config.Get("system.host").(string)
+	//APIHost := config.Get("system.host").(string)
 	APIPort := config.Get("system.apiPort").(string)
 	databaseHost := config.Get("database.host").(string)
 	baseTable := config.Get("database.baseTable").(string)
@@ -43,7 +43,7 @@ func Routes() {
 	routes.SetTrustedProxies([]string{})
 
 	routes.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{APIHost},
+		AllowOrigins:     []string{"*"},
 		AllowHeaders:     []string{"Access-Control-Allow-Origin", "*"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowMethods:     []string{"GET", "POST"},
