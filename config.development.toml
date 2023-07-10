@@ -6,3 +6,6 @@ host    = "http://localhost:3000"
 baseTable = "users"
 password  = "An1m@Rum@2000"
 host      = "localhost:3306"
+
+[kafka]
+host = "localhost:9092"

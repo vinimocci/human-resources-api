@@ -10,6 +10,7 @@ import (
 	"human-resources-api/utils"
 	"github.com/gin-contrib/cors"
 	"human-resources-api/entities/user"
+	"human-resources-api/entities/notifications"
 
 	_ 	 "github.com/go-sql-driver/mysql"
 	auth "human-resources-api/entities/auth"
@@ -37,6 +38,9 @@ func Routes() {
 
 	authRepo := auth.NewRepository(db)
 	authService := auth.NewService(authRepo)
+
+	notificationRepo := notifications.NewRepository(db)
+	notificationService := notifications.NewService(notificationRepo)
 
 	routes := gin.Default()
 	routes.SetTrustedProxies([]string{})
@@ -89,6 +93,10 @@ func Routes() {
 				"message":  result,
 			})
 		}
+	})
+
+	routes.GET("/getnotifications", func(c *gin.Context) {
+		 notifications.Service.GetNotifications(notificationService, c)
 	})
 
 	//testing purposes
