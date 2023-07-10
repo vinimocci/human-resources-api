@@ -30,7 +30,7 @@ func (s *service) GetNotifications(c *gin.Context) {
 	}
 	defer consumer.Close()
 
-	partitionConsumer, partitionErr := utils.CreateKafkaPartitionConsumer(consumer)
+	partitionConsumer, partitionErr := utils.CreateKafkaSinglePartitionConsumer(0, "notifications", consumer)
 	if partitionErr != nil {
 		log.Println("Kafka partition consumer creation error:", partitionErr)
 		return
