@@ -3,10 +3,8 @@ package notifications
 import (
 	"log"
 	"github.com/gin-gonic/gin"
-	"github.com/Shopify/sarama"
 	"human-resources-api/utils"
 	"github.com/gorilla/websocket"
-
 )
 
 type service struct {
@@ -19,25 +17,22 @@ func NewService(repo Repository) Service {
 
 
 func (s *service) GetNotifications(c *gin.Context) {
-	conn, err := utils.NetUpgrader.Upgrade(c.Writer, c.Request, nil)
-	if err != nil {
-		log.Println("WebSocket upgrade error:", err)
+	conn, upgradeErr := utils.NetUpgrader.Upgrade(c.Writer, c.Request, nil)
+	if upgradeErr != nil {
+		log.Println("WebSocket upgrade error:", upgradeErr)
 		return
 	}
 
-	config := sarama.NewConfig()
-	config.Consumer.Return.Errors = true
-
-	consumer, err := sarama.NewConsumer([]string{"localhost:9092"}, config)
-	if err != nil {
-		log.Println("Kafka consumer creation error:", err)
+	consumer, consumerErr := utils.CreateKafkaConsumer()
+	if consumerErr != nil {
+		log.Println("Kafka consumer creation error:", consumerErr)
 		return
 	}
 	defer consumer.Close()
 
-	partitionConsumer, err := consumer.ConsumePartition("notifications", 0, sarama.OffsetNewest)
-	if err != nil {
-		log.Println("Kafka partition consumer creation error:", err)
+	partitionConsumer, partitionErr := utils.CreateKafkaPartitionConsumer(consumer)
+	if partitionErr != nil {
+		log.Println("Kafka partition consumer creation error:", partitionErr)
 		return
 	}
 	defer partitionConsumer.Close()
