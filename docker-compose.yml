@@ -2,7 +2,7 @@ version: '3'
 services:
   mysql:
     image: "mysql:latest"
-    container_name: human-resources-project-database
+    container_name: web-solutions-database
     ports:
       - "3306:3306"
     environment:
