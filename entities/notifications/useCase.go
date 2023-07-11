@@ -3,7 +3,7 @@ package notifications
 import (
 	"log"
 	"github.com/gin-gonic/gin"
-	"human-resources-api/utils"
+	"web-solutions-api/utils"
 	"github.com/gorilla/websocket"
 )
 

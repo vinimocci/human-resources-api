@@ -1,7 +1,7 @@
 package utils
 
 import(
-	"human-resources-api/commons"
+	"web-solutions-api/commons"
 	"github.com/pelletier/go-toml"
 )
 

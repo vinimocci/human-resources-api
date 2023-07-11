@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 
-	commons "human-resources-api/commons"
-	structs "human-resources-api/commons/structs"
+	commons "web-solutions-api/commons"
+	structs "web-solutions-api/commons/structs"
 )
 
 type service struct {

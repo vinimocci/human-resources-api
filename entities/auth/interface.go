@@ -3,7 +3,7 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	
-	structs "human-resources-api/commons/structs"
+	structs "web-solutions-api/commons/structs"
 )
 type Service interface {
 	verifyIfEmailExists (email string) (bool, error)

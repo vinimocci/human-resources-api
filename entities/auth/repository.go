@@ -3,9 +3,9 @@ package auth
 import (
 	"fmt"
 	"database/sql"
-	"human-resources-api/commons/structs"
+	"web-solutions-api/commons/structs"
 
-	commons "human-resources-api/commons"
+	commons "web-solutions-api/commons"
 )
 
 type repository struct {

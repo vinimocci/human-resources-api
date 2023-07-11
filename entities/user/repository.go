@@ -5,8 +5,8 @@ import (
 	"context"
 	"database/sql"
 
-	commons "human-resources-api/commons"
-	structs "human-resources-api/commons/structs"
+	commons "web-solutions-api/commons"
+	structs "web-solutions-api/commons/structs"
 )
 
 type repository struct {

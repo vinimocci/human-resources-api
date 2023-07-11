@@ -1,4 +1,4 @@
-module human-resources-api
+module web-solutions-api
 
 go 1.20
 

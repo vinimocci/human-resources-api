@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"database/sql"
 	"github.com/gin-gonic/gin"
-	"human-resources-api/utils"
+	"web-solutions-api/utils"
 	"github.com/gin-contrib/cors"
-	"human-resources-api/entities/user"
-	"human-resources-api/entities/notifications"
+	"web-solutions-api/entities/user"
+	"web-solutions-api/entities/notifications"
 
 	_ 	 "github.com/go-sql-driver/mysql"
-	auth "human-resources-api/entities/auth"
+	auth "web-solutions-api/entities/auth"
 )
 
 func Routes() {

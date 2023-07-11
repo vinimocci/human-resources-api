@@ -1,7 +1,7 @@
 package main
 
 import (
-	server "human-resources-api/server"
+	server "web-solutions-api/server"
 )
 
 func main(){

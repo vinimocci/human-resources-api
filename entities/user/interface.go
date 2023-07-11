@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 
-	structs "human-resources-api/commons/structs"
+	structs "web-solutions-api/commons/structs"
 )
 
 
