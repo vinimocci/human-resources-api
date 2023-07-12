@@ -23,8 +23,8 @@ func NewService(repo Repository) Service {
 func validateNotificationData (context *gin.Context) (*structs.Notification, error) {
 	notification := &structs.Notification{}
 
-	if context.Request.PostFormValue("notification") != commons.EmptyResult {
-		notification.Description = context.Request.PostFormValue("notification")
+	if context.Request.PostFormValue("description") != commons.EmptyResult {
+		notification.Description = context.Request.PostFormValue("description")
 	}else{
 		return nil, fmt.Errorf("missing notification description")
 	}
