@@ -96,7 +96,27 @@ func Routes() {
 	})
 
 	routes.GET("/getnotifications", func(c *gin.Context) {
-		 notifications.Service.GetNotifications(notificationService, c)
+		 notifications.Service.GetNotificationMessages(notificationService, c)
+	})
+
+	routes.POST("/changeNotification", func (c *gin.Context)  {
+		producer, prdErr := utils.CreateKafkaProducer(config.Get("kafka.host").(string))
+		if prdErr != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": prdErr,
+			})
+		}
+
+		result, err := notifications.Service.RegisterNotificationMessage(notificationService, c, producer)
+		if err != nil{
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": err.Error(),
+			})
+		}else{
+			c.JSON(http.StatusOK, gin.H{
+				"message": result,
+			})
+		}
 	})
 
 	//testing purposes
